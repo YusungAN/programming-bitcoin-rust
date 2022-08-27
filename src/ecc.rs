@@ -284,8 +284,8 @@ impl S256Point {
 
     pub fn verify(&self, z: U256, sig: &Signiture) -> bool {
         let s_inv = _u512_to_u256(_pow_with_mod(_u256_to_u512(sig.s), _u256_to_u512(N()-U256::from_dec_str("2").unwrap()), _u256_to_u512(N())));
-        let u = z * s_inv % N();
-        let v = sig.r * s_inv % N();
+        let u = _u512_to_u256(_u256_to_u512(z) * _u256_to_u512(s_inv) % _u256_to_u512(N()));
+        let v = _u512_to_u256(_u256_to_u512(sig.r) * _u256_to_u512(s_inv) % _u256_to_u512(N()));
         let self_obj = S256Point::new(S256Field::new(self.x().num), S256Field::new(self.y().num));
         let total = &G().scalar_mul(u)+&self_obj.scalar_mul(v);
         total.x().num == sig.r
